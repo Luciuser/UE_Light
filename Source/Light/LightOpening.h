@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PlatLight.h"
 #include "LightOpening.generated.h"
 
 UCLASS()
@@ -19,6 +20,10 @@ public:
 		UStaticMeshComponent* StaticMeshFire;	// 静态网格体，直接读取开关模型
 	UPROPERTY()
 		class UBoxComponent* BoxComponent;	// 碰撞包围盒
+	UPROPERTY()
+		TArray<APlatLight*> ObjectArray;
+
+	bool PlatLightNextState;
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,4 +33,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// 碰撞函数
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	// 开灯关灯函数
+	UFUNCTION()
+		void LightChange();
 };

@@ -13,5 +13,5 @@ ALightGameMode::ALightGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
-	CurrentCandy = nullptr;
+	CurrentLightOpening = nullptr;
 }

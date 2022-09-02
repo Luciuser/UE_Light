@@ -2,8 +2,14 @@
 
 
 #include "LightOpening.h"
+#include "LightCharacter.h"
+#include "LightGameMode.h"
+#include "Components\SpotLightComponent.h"
 #include "Components\PointLightComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"
+//#include "Public/EngineUtils.h"
 
 // Sets default values
 ALightOpening::ALightOpening()
@@ -29,16 +35,23 @@ ALightOpening::ALightOpening()
 	BoxComponent->SetRelativeLocation(GetActorLocation()+FVector(0,100,0));	// 包围盒与静态网格体位于同一原点
 	BoxComponent->SetCollisionProfileName("Trigger");
 
-
-	//BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACandy::OnOverlapBegin);
-	//BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ACandy::OnOverlapEnd);
+	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ALightOpening::OnOverlapBegin);
+	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &ALightOpening::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
 void ALightOpening::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PlatLightNextState = false;
 	
+	for (TActorIterator<APlatLight> Iterator(GetWorld()); Iterator; ++Iterator)
+	{
+		ObjectArray.AddUnique(*Iterator);
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Some variable values: x = %d"), ObjectArray.Num()));
 }
 
 // Called every frame
@@ -46,5 +59,54 @@ void ALightOpening::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ALightOpening::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Test"));
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		ALightCharacter *PlayerCharacter = Cast<ALightCharacter>(OtherActor); // 确定碰撞的对象
+		if (PlayerCharacter != nullptr) {
+			UWorld* world = GetWorld();
+			ALightGameMode *LightGameMode = Cast<ALightGameMode>(UGameplayStatics::GetGameMode(world));	// 获取GameMode类
+			LightGameMode->CurrentLightOpening = this;	// 给GameMode里的蜡烛赋值
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, TEXT("This light opening saved."));
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, TEXT("The actor overlaped is not player"));
+		}
+	}
+}
+
+void ALightOpening::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Test"));
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		ALightCharacter *PlayerCharacter = Cast<ALightCharacter>(OtherActor); // 确定碰撞的对象
+		if (PlayerCharacter != nullptr) {
+			UWorld* world = GetWorld();
+			ALightGameMode *LightGameMode = Cast<ALightGameMode>(UGameplayStatics::GetGameMode(world));	// 获取GameMode类
+			LightGameMode->CurrentLightOpening = nullptr;	// 给GameMode里的蜡烛赋值
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, TEXT("This light opening deleted."));
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, TEXT("The actor overlaped is not player"));
+		}
+	}
+}
+
+void ALightOpening::LightChange()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Interact"));
+
+	for (auto &Light : ObjectArray) {
+		Light->SpotLight->SetVisibility(PlatLightNextState);
+	}
+
+	PlatLightNextState = !PlatLightNextState;
 }
 

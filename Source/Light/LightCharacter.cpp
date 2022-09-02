@@ -154,13 +154,11 @@ void ALightCharacter::ChangeSpotLightIntensity(int direction)
 
 void ALightCharacter::OnInteract()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Test"));
-
-	// 目前仅有蜡烛，因此同蜡烛互动
+	// 目前仅有开关，因此同开关互动
 	UWorld* world = GetWorld();
 	ALightGameMode *LightGameMode = Cast<ALightGameMode>(UGameplayStatics::GetGameMode(world));	// 获取GameMode类
-	if (LightGameMode->CurrentCandy != nullptr) {
-		LightGameMode->CurrentCandy->LightChange();
+	if (LightGameMode->CurrentLightOpening != nullptr) {
+		LightGameMode->CurrentLightOpening->LightChange();
 	}
 }
 

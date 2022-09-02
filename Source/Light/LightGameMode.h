@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Candy.h"
+#include "LightOpening.h"
 #include "LightGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -16,7 +16,7 @@ public:
 	ALightGameMode();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		ACandy* CurrentCandy;
+		ALightOpening* CurrentLightOpening;
 };
 
 

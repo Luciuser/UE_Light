@@ -72,7 +72,7 @@ void ACandy::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * Other
 		if (PlayerCharacter != nullptr) {
 			UWorld* world = GetWorld();
 			ALightGameMode *LightGameMode = Cast<ALightGameMode>(UGameplayStatics::GetGameMode(world));	// 获取GameMode类
-			LightGameMode->CurrentCandy = this;	// 给GameMode里的蜡烛赋值
+			//LightGameMode->CurrentCandy = this;	// 给GameMode里的蜡烛赋值
 
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, TEXT("This candy saved."));
 		}
@@ -91,7 +91,7 @@ void ACandy::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherAc
 		if (PlayerCharacter != nullptr) {
 			UWorld* world = GetWorld();
 			ALightGameMode *LightGameMode = Cast<ALightGameMode>(UGameplayStatics::GetGameMode(world));	// 获取GameMode类
-			LightGameMode->CurrentCandy = nullptr;	// 给GameMode里的蜡烛赋值
+			//LightGameMode->CurrentCandy = nullptr;	// 给GameMode里的蜡烛赋值
 
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, TEXT("This candy deleted."));
 		}
