@@ -46,16 +46,15 @@ ALightCharacter::ALightCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// 点光源
+	// 聚光灯
 	SpotBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpotLightBoom"));
 	SpotBoom->SetupAttachment(RootComponent);
 	SpotBoom->TargetArmLength = 100.0f; // The camera follows at this distance behind the character	
-	SpotBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	SpotBoom->bUsePawnControlRotation = false;
 
 	SpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("SpotLight"));
 	SpotLight->SetupAttachment(SpotBoom, USpringArmComponent::SocketName);
 	SpotLight->SetVisibility(true);
-	SpotBoom->bUsePawnControlRotation = false;
 	SpotLight->SetLightColor(FLinearColor(1, 1, 1, 1));
 	SpotLight->SetIntensity(3000);
 	SpotLight->SetOuterConeAngle(40);
