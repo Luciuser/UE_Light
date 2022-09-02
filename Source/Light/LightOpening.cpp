@@ -18,20 +18,20 @@ ALightOpening::ALightOpening()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 开关的静态网格体
-	StaticMeshFire = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshFire"));
+	StaticMeshLightOpening = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshLightOpening"));
 	//StaticMeshFire->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Game/Main/Mesh/SM_CornerFrame.SM_CornerFrame"));	// 读取静态网格体资源
 	if (CubeVisualAsset.Succeeded())
 	{
-		StaticMeshFire->SetStaticMesh(CubeVisualAsset.Object);
-		StaticMeshFire->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-		StaticMeshFire->SetCollisionEnabled(ECollisionEnabled::NoCollision);	// 关闭静态网格体的碰撞
+		StaticMeshLightOpening->SetStaticMesh(CubeVisualAsset.Object);
+		StaticMeshLightOpening->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		StaticMeshLightOpening->SetCollisionEnabled(ECollisionEnabled::NoCollision);	// 关闭静态网格体的碰撞
 	}
 
 	// 碰撞包围盒
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	BoxComponent->InitBoxExtent(FVector(50, 100, 100));	// 包围盒范围
-	BoxComponent->SetupAttachment(StaticMeshFire);
+	BoxComponent->SetupAttachment(StaticMeshLightOpening);
 	BoxComponent->SetRelativeLocation(GetActorLocation()+FVector(0,100,0));	// 包围盒与静态网格体位于同一原点
 	BoxComponent->SetCollisionProfileName("Trigger");
 
@@ -45,10 +45,16 @@ void ALightOpening::BeginPlay()
 	Super::BeginPlay();
 
 	PlatLightNextState = false;
+	OpenDoor = true;
 	
 	for (TActorIterator<APlatLight> Iterator(GetWorld()); Iterator; ++Iterator)
 	{
 		ObjectArray.AddUnique(*Iterator);
+	}
+	for (TActorIterator<ADoor> Iterator(GetWorld()); Iterator; ++Iterator)
+	{
+		ObjectDoor = (*Iterator);
+		break;
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Some variable values: x = %d"), ObjectArray.Num()));
@@ -108,5 +114,9 @@ void ALightOpening::LightChange()
 	}
 
 	PlatLightNextState = !PlatLightNextState;
+	if (OpenDoor) {
+		OpenDoor = false;
+		ObjectDoor->DoorOpen();
+	}
 }
 

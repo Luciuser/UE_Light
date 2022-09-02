@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PlatLight.h"
+#include "Door.h"
 #include "LightOpening.generated.h"
 
 UCLASS()
@@ -17,13 +18,16 @@ public:
 	ALightOpening();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UStaticMeshComponent* StaticMeshFire;	// 静态网格体，直接读取开关模型
+		UStaticMeshComponent* StaticMeshLightOpening;	// 静态网格体，直接读取开关模型
 	UPROPERTY()
 		class UBoxComponent* BoxComponent;	// 碰撞包围盒
 	UPROPERTY()
-		TArray<APlatLight*> ObjectArray;
+		TArray<APlatLight*> ObjectArray; // 存储所有的灯
+	UPROPERTY()
+		ADoor* ObjectDoor; // 存储门
 
 	bool PlatLightNextState;
+	bool OpenDoor;
 
 protected:
 	// Called when the game starts or when spawned
