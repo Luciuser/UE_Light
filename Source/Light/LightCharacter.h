@@ -77,6 +77,9 @@ protected:
 	// 和世界中的物体互动
 	void OnInteract();
 
+	// 退出游戏
+	void QuitGame();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

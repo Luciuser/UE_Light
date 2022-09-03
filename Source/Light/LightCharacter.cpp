@@ -96,8 +96,13 @@ void ALightCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ALightCharacter::OnResetVR);
 
-	// 操控聚光灯
+	// 互动
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ALightCharacter::OnInteract);
+
+	// 退出QuitGame
+	PlayerInputComponent->BindAction("QuitGame", IE_Pressed, this, &ALightCharacter::QuitGame);
+
+	// 操控聚光灯
 	PlayerInputComponent->BindAction("ChangeSpotLightVisibility", IE_Pressed, this, &ALightCharacter::ChangeSpotLightVisibility);
 	PlayerInputComponent->BindAction("AddSpotIntensity", IE_Pressed, this, &ALightCharacter::AddSpotIntensity);
 	PlayerInputComponent->BindAction("SubtractSpotIntensity", IE_Pressed, this, &ALightCharacter::SubtractSpotIntensity);
@@ -159,6 +164,16 @@ void ALightCharacter::OnInteract()
 	ALightGameMode *LightGameMode = Cast<ALightGameMode>(UGameplayStatics::GetGameMode(world));	// 获取GameMode类
 	if (LightGameMode->CurrentLightOpening != nullptr) {
 		LightGameMode->CurrentLightOpening->LightChange();
+	}
+}
+
+void ALightCharacter::QuitGame()
+{
+	APlayerController *PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController != nullptr) {
+		//EatCoinPlayerController->Save();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Game Quit."));
+		UKismetSystemLibrary::QuitGame(this, PlayerController, EQuitPreference::Quit, false);
 	}
 }
 

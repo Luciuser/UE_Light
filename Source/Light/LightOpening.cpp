@@ -69,7 +69,6 @@ void ALightOpening::Tick(float DeltaTime)
 
 void ALightOpening::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Test"));
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		ALightCharacter *PlayerCharacter = Cast<ALightCharacter>(OtherActor); // 确定碰撞的对象
@@ -88,7 +87,6 @@ void ALightOpening::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor 
 
 void ALightOpening::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Test"));
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		ALightCharacter *PlayerCharacter = Cast<ALightCharacter>(OtherActor); // 确定碰撞的对象

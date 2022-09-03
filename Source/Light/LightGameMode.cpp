@@ -2,6 +2,7 @@
 
 #include "LightGameMode.h"
 #include "LightCharacter.h"
+#include "LightHUD.h"
 #include "UObject/ConstructorHelpers.h"
 
 ALightGameMode::ALightGameMode()
@@ -11,6 +12,7 @@ ALightGameMode::ALightGameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+		HUDClass = ALightHUD::StaticClass();
 	}
 
 	CurrentLightOpening = nullptr;
